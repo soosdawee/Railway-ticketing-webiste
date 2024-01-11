@@ -3,7 +3,9 @@ import  {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client"
 
 import HomePage from "./pages/Homepage.js";
 import MapPage from "./pages/MapPage.js";
-import SiteHeader from "./components/SiteHeader.js";
+import TicketingPage from "./pages/TicketingPage.js";
+import LandingPage from "./pages/LandingPage.js";
+import LoginPage from "./pages/LoginPage.js";
 
 const client = new ApolloClient ( {
   uri: 'http://localhost:1337/graphql',
@@ -15,10 +17,12 @@ function App() {
     <Router>
       <ApolloProvider client={client}>
       <div className="App">
-        <SiteHeader />
         <Routes>
-          <Route exact path='/' element={<HomePage />} />
+          <Route exact path='/' element={<LandingPage />} />
           <Route path='/map' element={<MapPage />} />
+          <Route path='/ticketing' element={<TicketingPage />} />
+          <Route path='/destinations' element={<HomePage />} />
+          <Route path='/login' element={<LoginPage />} />
         </Routes>
       </div>
       </ApolloProvider>
