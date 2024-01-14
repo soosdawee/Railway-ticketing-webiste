@@ -52,7 +52,7 @@ function TicketingForm() {
   };
 
   if (citiesLoading || connectionsLoading) return <p>Loading...</p>;
-  if (citiesError || connectionsError) return <p>Error</p>;
+  if (citiesError || connectionsError) return <div><SiteHeader /><Navbar /><p>Error</p></div>;
 
   console.log(citiesData);
   console.log(connectionsData);

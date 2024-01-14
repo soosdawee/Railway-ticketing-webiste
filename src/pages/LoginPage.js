@@ -2,85 +2,94 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { Link } from 'react-router-dom';
+import axios from "axios";
+import { toast} from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { storeUser } from '../helper';
 
 function FormExample() {
   const [validated, setValidated] = useState(false);
-  const [username, setUsername] = useState('');
+  const [identifier, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
+      console.log("invalid");
+      event.preventDefault();
       event.stopPropagation();
     } else {
-      // Perform your GraphQL query validation here using username and password variables
-      // Example: You can use Apollo Client to send a mutation or query to your GraphQL server
-
-      // Simulated validation
-      const isValid = await simulateServerValidation(username, password);
-
-      if (isValid) {
-        console.log('Form is valid. Perform GraphQL query here.');
-      } else {
-        console.log('Invalid username or password.');
-      }
+      console.log("valid");
+      await loginAttempt();
+      setValidated(true);
     }
-
-    setValidated(true);
+    
   };
 
-  const simulateServerValidation = async (username, password) => {
-    // Simulate server validation logic
-    // You can replace this with your actual GraphQL query validation logic
-    return new Promise((resolve) => {
-      // Simulate asynchronous server request
-      setTimeout(() => {
-        // Return true if validation succeeds, false otherwise
-        resolve(username === 'validUser' && password === 'validPassword');
-      }, 1000);
-    });
+  const loginAttempt = async () => {
+    try {
+      const {data} = await axios.post('http://localhost:1337/api/auth/local', {identifier, password});
+      console.log(data);
+      if (data.jwt) {
+        storeUser(data);
+        toast.success("Logged in successfully!", {
+          hideProgressBar: true
+        });
+        setUsername('');
+        setPassword('');
+        navigate('/destinations');
+      }
+      
+    } catch (error) {
+      toast.error(error.message, {
+        hideProgressBar: true
+      })
+    }    
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Form.Group controlId="validationCustomUsername">
-        <Form.Label>Username</Form.Label>
-        <InputGroup hasValidation>
-          <Form.Control
-            type="text"
-            placeholder="Enter your username"
-            aria-describedby="inputGroupPrepend"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Form.Control.Feedback type="invalid">
-            Please enter a valid username.
-          </Form.Control.Feedback>
-        </InputGroup>
-      </Form.Group>
+    <div className='login-page'>
+      <Form noValidate validated={validated} onSubmit={handleSubmit} className="login-form-card">
+        <Form.Group className="login-group" controlId="validationCustomUsername">
+          <Form.Label>Username</Form.Label>
+          <InputGroup hasValidation>
+            <Form.Control
+              type="text"
+              placeholder="Enter your username"
+              aria-describedby="inputGroupPrepend"
+              required
+              value={identifier}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a valid username.
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Form.Group>
 
-      <Form.Group controlId="validationPassword">
-        <Form.Label>Password</Form.Label>
-        <InputGroup hasValidation>
-          <Form.Control
-            type="password"
-            placeholder="Enter your password"
-            aria-describedby="inputGroupPrepend"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Form.Control.Feedback type="invalid">
-            Please enter a valid password.
-          </Form.Control.Feedback>
-        </InputGroup>
-      </Form.Group>
+        <Form.Group controlId="validationPassword">
+          <Form.Label>Password</Form.Label>
+          <InputGroup hasValidation>
+            <Form.Control
+              type="password"
+              placeholder="Enter your password"
+              aria-describedby="inputGroupPrepend"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter a valid password.
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Form.Group>
 
-      <Button type="submit">Submit form</Button>
-    </Form>
+        <Button color="primary" onClick={handleSubmit}>Submit form</Button>
+      </Form>
+      <h6>Don't have an account? Click <Link to="/register">here</Link> to register</h6>
+    </div>
   );
 }
 

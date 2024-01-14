@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {useQuery, gql} from '@apollo/client'
 import SiteHeader from "../components/SiteHeader.js";
 import Navbar from "../components/Navbar";
+import { userData } from '../helper';
 
 const CITIES = gql`
 query GetCities {
@@ -40,7 +41,8 @@ const ReadMore = ({children}) => {
 };
 
 export default function HomePage() {
-    const { loading, error, data } = useQuery(CITIES) 
+    const { loading, error, data } = useQuery(CITIES);
+    const username = userData().username;
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error</p>
@@ -49,7 +51,7 @@ export default function HomePage() {
 
     return (
       <div>
-            <SiteHeader /><Navbar />
+            <SiteHeader /><Navbar /><h2>Welcome, {username} </h2>
           {data.cities.data.map(city => (
               <div key={city.id} className='city-card'>
                   <h2>{city.attributes.name}</h2>

@@ -62,10 +62,13 @@ a {
   width: auto;
 }
 
-.navbar-text {
+.navbar-logout {
   margin-left: auto;
-  margin-top: 10px;
   margin-right: 10px;
+}
+
+.no-underline a {
+  text-decoration: none !important;
 }
 
 .city-card {
@@ -221,38 +224,12 @@ button {
   border-radius: 5px;
 }
 
-/* Add this CSS to your existing stylesheet or create a new one */
-
-/* Adjust styling for the form */
-.FormExample {
-  margin: auto;
-  max-width: 600px;
+.login-form-card {
+  background-color: white;;
 }
 
-/* Adjust styling for the form controls */
-.FormExample .form-group {
-  margin-bottom: 20px;
-}
-
-/* Adjust styling for the input group */
-.FormExample .input-group {
-  width: 100%;
-}
-
-/* Adjust styling for the form check */
-.FormExample .form-check {
-  margin-top: 15px;
-}
-
-/* Adjust styling for the submit button */
-.FormExample .btn {
-  background-color: #3498db; /* Button background color */
-  color: #fff; /* Button text color */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.FormExample .btn:hover {
-  background-color: #2980b9; /* Button hover background color */
+.login-page {
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
