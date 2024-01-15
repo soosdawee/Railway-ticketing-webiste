@@ -26,6 +26,15 @@ a {
   text-align: center;
 }
 
+.attractiontypes a {
+  margin-right: 10px;
+  color: green;
+}
+
+.smalls {
+  margin: 0px 10px;
+}
+
 .navbar {
   background-color: lightgray;
   margin-bottom: 30px;

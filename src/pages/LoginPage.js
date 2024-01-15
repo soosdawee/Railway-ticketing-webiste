@@ -39,7 +39,7 @@ function FormExample() {
         });
         setUsername('');
         setPassword('');
-        navigate('/destinations');
+        navigate('/home');
       }
       
     } catch (error) {
