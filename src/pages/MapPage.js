@@ -6,7 +6,7 @@ export default function MapPage() {
   return (
     <div>
       <SiteHeader /><Navbar />
-      <iframe
+      <div className='home-page'><iframe
   src='https://flo.uri.sh/visualisation/15516363/embed'
   title='Interactive or visual content'
   className='flourish-embed-iframe'
@@ -18,6 +18,7 @@ export default function MapPage() {
 <div
   style={{ width: '100%', marginTop: '4px', textAlign: 'right' }}
 >
+</div>
 </div>
 </div>
   )

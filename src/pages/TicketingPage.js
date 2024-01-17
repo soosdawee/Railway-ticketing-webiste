@@ -6,7 +6,7 @@ import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client';
 import SiteHeader from "../components/SiteHeader.js";
 import Navbar from "../components/Navbar";
 import { userData } from '../helper.js';
-import { toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const CITIES = gql`
   query GetCities {
@@ -25,6 +25,7 @@ const CONNECTIONS = gql`
   query GetConnections($departure: String!, $arrival: String!) {
     connections(
       filters: { departure: { eq: $departure }, arrival: { eq: $arrival } }
+      sort: "departureTime:asc"
       ) {
       data {
         id
@@ -83,8 +84,8 @@ const ReadMore = ({ connectionId, date }) => {
 
   const toggleReadMore = async () => {
     setIsReadMore(!isReadMore);
-    const {data} = await getCardInfo({ variables: { date: date.toISOString().slice(0, 10), connection: connectionId } });
-   
+    const { data } = await getCardInfo({ variables: { date: date.toISOString().slice(0, 10), connection: connectionId } });
+
     const maxNumber = data.connections.data[0].attributes.numberOfSeats;
     const seatsTaken = data.tickets.data.map(ticket => ticket.attributes.seat);
 
@@ -100,12 +101,10 @@ const ReadMore = ({ connectionId, date }) => {
     try {
       // Make sure a seat is selected
       if (!selectedSeat) {
-        toast.error('Please select a seat before buying a ticket.', {hideProgressBar: true});
+        toast.error('Please select a seat before buying a ticket.', { hideProgressBar: true });
         console.error('Please select a seat before buying a ticket.');
         return;
       }
-  
-      // Perform the mutation
 
       const { data } = await createTicket({
         variables: {
@@ -115,8 +114,7 @@ const ReadMore = ({ connectionId, date }) => {
           connection: connectionId,
         },
       });
-  
-      // Check if the mutation was successful
+
       if (data && data.createTicket && data.createTicket.data && data.createTicket.data.id) {
         console.log('Ticket created successfully:', data.createTicket.data.id);
         toast.success("Ticket successfully bought!", {
@@ -125,13 +123,13 @@ const ReadMore = ({ connectionId, date }) => {
       } else {
         toast.error("An error has occured during the election process!", {
           hideProgressBar: true
-        })
+        });
       }
     } catch (error) {
       console.error('An error occurred during the mutation:', error);
     }
   };
-  
+
 
   console.log(date);
 
@@ -149,10 +147,10 @@ const ReadMore = ({ connectionId, date }) => {
           <Form.Select aria-label="select-seats" onChange={handleSeatChange} value={selectedSeat} className="mb-3 custom-select">
             <option>Select a seat</option>
             {availableSeats.map((seat) => (
-                  <option key={seat} value={seat}>
-                    {seat}
-                  </option>
-                ))}
+              <option key={seat} value={seat}>
+                {seat}
+              </option>
+            ))}
           </Form.Select>
           <Button variant="primary" onClick={handleShowSeatsClick} className="buy-ticket-button">
             Buy Ticket
@@ -176,7 +174,11 @@ function TicketingForm() {
   };
 
   const handleSearchClick = () => {
-    getConnections({ variables: { departure: selectedDeparture, arrival: selectedArrival } });
+    if (selectedArrival == selectedDeparture) {
+      toast.error("You cannot have the same city as arrival and departure!", { hideProgressBar: true })
+    } else {
+      getConnections({ variables: { departure: selectedDeparture, arrival: selectedArrival } });
+    }
   };
 
   if (citiesLoading || connectionsLoading) return <p>Loading...</p>;
@@ -195,6 +197,7 @@ function TicketingForm() {
                 style={{ width: '200px' }}
                 onChange={(e) => setSelectedDeparture(e.target.value)}
                 value={selectedDeparture || ''}
+                required
               >
                 <option>Choose departure</option>
                 {citiesData.cities.data.map((city) => (
@@ -210,6 +213,7 @@ function TicketingForm() {
                 style={{ width: '200px' }}
                 onChange={(e) => setSelectedArrival(e.target.value)}
                 value={selectedArrival || ''}
+                required
               >
                 <option>Choose arrival</option>
                 {citiesData.cities.data.map((city) => (
@@ -227,6 +231,7 @@ function TicketingForm() {
               placeholderText="Select a date"
               className="mb-3 date-picker custom-select"
               minDate={new Date()}
+              required
             />
             <Button type="submit" className="search-button" onClick={handleSearchClick}>
               Search for trains!
@@ -234,30 +239,35 @@ function TicketingForm() {
           </div>
         </Form>
 
-        {connectionsData && connectionsData.connections.data.length > 0 && (
-        <div className="ticket-cards">
-          {connectionsData.connections.data.map((connection) => (
-            <Card key={connection.id} className="ticket-card mb-3">
-              <div className="price-badge">
-                {connection.attributes.price} RON
-              </div>
-              <Card.Body>
-                <div className="connection-details">
-                  <div className="departure-time">
-                    Departure Time: {connection.attributes.departureTime.slice(0, 5)}
+        {connectionsData && (
+          <div className="ticket-cards">
+            {connectionsData.connections.data.length > 0 ? (
+              connectionsData.connections.data.map((connection) => (
+                <Card key={connection.id} className="ticket-card mb-3">
+                  <div className="price-badge">
+                    {connection.attributes.price} RON
                   </div>
-                  <div className="arrival-time">
-                    Arrival Time: {connection.attributes.arrivalTime.slice(0, 5)}
-                  </div>
-                </div>
-                <ReadMore connectionId={connection.id} date={selectedDate} />
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      )}
+                  <Card.Body>
+                    <div className="connection-details">
+                      <div className="departure-time">
+                        Departure Time: {connection.attributes.departureTime.slice(0, 5)}
+                      </div>
+                      <div className="arrival-time">
+                        Arrival Time: {connection.attributes.arrivalTime.slice(0, 5)}
+                      </div>
+                    </div>
+                    <ReadMore connectionId={connection.id} date={selectedDate} />
+                  </Card.Body>
+                </Card>
+              ))
+            ) : (
+              <p>The two cities are not connected.</p>
+            )}
+          </div>
+        )}
+
       </div>
-      </div>
+    </div>
   );
 }
 

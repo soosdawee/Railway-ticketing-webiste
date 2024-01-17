@@ -12,6 +12,9 @@ function RegistrationPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
 
     const handleSignUp = async (event) => {
@@ -35,6 +38,9 @@ function RegistrationPage() {
             setEmail('');
             setPassword('');
             navigate('/login');
+            toast.success("You signed up succesfully!", {
+                hideProgressBar: true
+            })
         } catch (error) {
             toast.error(error.message, {
                 hideProgressBar: true
@@ -42,8 +48,38 @@ function RegistrationPage() {
         }
     };
 
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+        if (e.target.value.trim() === '') {
+          setUsernameError('Empty input');
+        } else if (e.target.value.length < 5) {
+          setUsernameError('At least 5 characters');
+        }else {
+          setUsernameError('');
+        }
+      };
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (!e.target.value.includes('@') || !e.target.value.includes('.')) {
+            setEmailError('Not a valid email address');
+        }
+        else {
+            setEmailError('');
+        }
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        if (e.target.value.length < 6) {
+          setPasswordError('At least 6 characters');
+        }else {
+          setPasswordError('');
+        }
+      };
+
     return (
-        <div className='registration-page'>
+        <div className='form-page'>
             <Form noValidate validated={validated} onSubmit={handleSignUp} className="login-form-card">
                 <Form.Group className="login-group" controlId="validationCustomUsername">
                     <Form.Label>Username</Form.Label>
@@ -54,12 +90,16 @@ function RegistrationPage() {
                             aria-describedby="inputGroupPrepend"
                             required
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={handleUsernameChange}
+                        isInvalid={usernameError !== ''}
                         />
+                        <Form.Control.Feedback type="invalid" className='form-feedback'>
+                            {usernameError}
+                        </Form.Control.Feedback>
                     </InputGroup>
                 </Form.Group>
 
-                <Form.Group controlId="validationPassword">
+                <Form.Group className="login-group" controlId="validationPassword">
                     <Form.Label>Email</Form.Label>
                     <InputGroup hasValidation>
                         <Form.Control
@@ -68,12 +108,16 @@ function RegistrationPage() {
                             aria-describedby="inputGroupPrepend"
                             required
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
+                            isInvalid={emailError !== ''}
                         />
+                        <Form.Control.Feedback type="invalid" className='form-feedback'>
+                            {emailError}
+                        </Form.Control.Feedback>
                     </InputGroup>
                 </Form.Group>
 
-                <Form.Group controlId="validationPassword">
+                <Form.Group className="login-group" controlId="validationPassword">
                     <Form.Label>Password</Form.Label>
                     <InputGroup hasValidation>
                         <Form.Control
@@ -82,13 +126,19 @@ function RegistrationPage() {
                             aria-describedby="inputGroupPrepend"
                             required
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
+                            isInvalid={passwordError !== ''}
                         />
+                        <Form.Control.Feedback type="invalid" className='form-feedback'>
+                            {passwordError}
+                        </Form.Control.Feedback>
                     </InputGroup>
                 </Form.Group>
 
                 <Button color="primary" onClick={handleSignUp}>Sign up</Button>
+                <div className='router'>Already have an account? Click <Link to="/login">here</Link> to log in.</div>
             </Form>
+           
         </div>
     );
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
 import SiteHeader from '../components/SiteHeader.js';
 import Navbar from '../components/Navbar';
 import { userData } from '../helper';
 import { Link } from 'react-router-dom';
+import { useQuery, gql } from '@apollo/client';
 
 const CITIES = gql`
   query GetCities {
@@ -69,7 +69,8 @@ export default function HomePage() {
     <div>
       <SiteHeader />
       <Navbar />
-      <h2>Welcome, {username} </h2>
+      <div className='home-page'>
+      <h2>Welcome, {username}! </h2>
       <nav className="attractiontypes">
         <span>Filter by what you would like to do!</span>{' '}
         {dataAttr?.attractiontypes?.data?.map(attraction => (
@@ -80,7 +81,7 @@ export default function HomePage() {
       </nav>
       {data?.cities?.data.map(city => (
         <div key={city.id} className="city-card">
-          <h3>{city.attributes.name}</h3>
+          <h3 className='city-name'>{city.attributes.name}</h3>
           {city.attributes.attractiontypes?.data?.map(attractionType => (
             <small className="smalls" key={attractionType.id}>
               {attractionType.attributes.name}
@@ -89,6 +90,7 @@ export default function HomePage() {
           <ReadMore>{city.attributes.body}</ReadMore>
         </div>
       ))}
+    </div>
     </div>
   );
 }

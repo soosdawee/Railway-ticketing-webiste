@@ -12,6 +12,8 @@ function FormExample() {
   const [validated, setValidated] = useState(false);
   const [identifier, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -49,46 +51,68 @@ function FormExample() {
     }    
   };
 
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+    if (e.target.value.trim() === '') {
+      setUsernameError('Empty input');
+    } else if (e.target.value.length < 5) {
+      setUsernameError('At least 5 characters');
+    }else {
+      setUsernameError('');
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length < 6) {
+      setPasswordError('Password not long enough');
+    }else {
+      setPasswordError('');
+    }
+  };
+
   return (
-    <div className='login-page'>
+    <div className='form-page'>
       <Form noValidate validated={validated} onSubmit={handleSubmit} className="login-form-card">
         <Form.Group className="login-group" controlId="validationCustomUsername">
-          <Form.Label>Username</Form.Label>
-          <InputGroup hasValidation>
+          <Form.Label className='label'>Identifier</Form.Label>
+          <InputGroup className='actual-input' hasValidation>
             <Form.Control
               type="text"
               placeholder="Enter your username"
               aria-describedby="inputGroupPrepend"
               required
               value={identifier}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsernameChange}
+              isInvalid={usernameError !== ''}
             />
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid username.
+            <Form.Control.Feedback type="invalid" className='form-feedback'>
+              {usernameError}
             </Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
 
-        <Form.Group controlId="validationPassword">
-          <Form.Label>Password</Form.Label>
-          <InputGroup hasValidation>
+        <Form.Group className="login-group" controlId="validationPassword">
+          <Form.Label className='labl'>Password</Form.Label>
+          <InputGroup className='actual-input' hasValidation>
             <Form.Control
               type="password"
               placeholder="Enter your password"
               aria-describedby="inputGroupPrepend"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
             />
-            <Form.Control.Feedback type="invalid">
-              Please enter a valid password.
+            <Form.Control.Feedback type="invalid" className='form-feedback'>
+              {passwordError}
             </Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
 
-        <Button color="primary" onClick={handleSubmit}>Submit form</Button>
+        <Button color="primary" onClick={handleSubmit}>Log in</Button>
+        <div className='router'>Don't have an account? Click <Link to="/register">here</Link> to register.</div>
       </Form>
-      <h6>Don't have an account? Click <Link to="/register">here</Link> to register</h6>
+      
     </div>
   );
 }

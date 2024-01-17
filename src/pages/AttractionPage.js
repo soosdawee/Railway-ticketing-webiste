@@ -84,7 +84,7 @@ export default function HomePage() {
 
     return (
       <div>
-            <SiteHeader /><Navbar /><h2>Welcome, {username} </h2>
+            <SiteHeader /><Navbar /><div className='home-page'> <h2>Welcome, {username} </h2>
             <nav className='attractiontypes'><span>Filter by what you would like to do!</span> {dataAttr?.attractiontypes?.data.map(attraction => (
               <Link key={attraction.id} to={`/attr/${attraction.id}`}>{attraction.attributes.name}</Link>
             ))}</nav>
@@ -98,6 +98,7 @@ export default function HomePage() {
                   
               </div>
           ))}
+      </div>
       </div>
     )
 }

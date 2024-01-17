@@ -20,16 +20,16 @@ function NavbarComp() {
         <Navbar.Brand href="/home" className="navbar-brand">
           <img src={process.env.PUBLIC_URL + "/wumpus.png"} alt='Wumpus' width={50}/>
           <Nav className="links-to-pages">
-          <Nav.Link href="/home">Home</Nav.Link>
-          <Nav.Link href="/map">View Map</Nav.Link>
-          <Nav.Link href="/ticketing">Embark on journeys</Nav.Link>
-          <Nav.Link href="/mytickets">My tickets</Nav.Link>
+          <Nav.Link href="/home" className='link'>Home</Nav.Link>
+          <Nav.Link href="/map" className='link'>View Map</Nav.Link>
+          <Nav.Link href="/ticketing" className='link'>Embark on journeys</Nav.Link>
+          <Nav.Link href="/mytickets" className='link'>My tickets</Nav.Link>
         </Nav>
         </Navbar.Brand>
         
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="navbar-logout">
-          <Nav.Link onClick={logoutAttempt} >Log out</Nav.Link>
+          <Nav.Link onClick={logoutAttempt} className='link'>Log out</Nav.Link>
         </Nav>
         
         </Navbar.Collapse>

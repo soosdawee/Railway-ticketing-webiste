@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage.js";
 import RegistrationPage from "./pages/RegiatrationPage.js";
 import AttractionPage from './pages/AttractionPage.js';
 import MyTicketsPage from './pages/MyTicketsPage.js';
+import PhotoPage from "./pages/PhotoPage.js";
 import { Protector } from "./helper.js";
 import { ToastContainer} from "react-toastify"
 
@@ -31,6 +32,7 @@ function App() {
           <Route path='/register' element={<RegistrationPage />} />
           <Route path='/attr/:id' element={<Protector Component={AttractionPage} />} />
           <Route path='/mytickets' element={<Protector Component={MyTicketsPage} />} />
+          <Route path='/photo/:id' element={<PhotoPage />}/>
         </Routes>
       </div>
       <ToastContainer />
