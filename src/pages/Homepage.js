@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
 const CITIES = gql`
-  query GetCities {
-    cities {
+  query GetCities  {
+    cities (pagination: {page:1, pageSize: 30}){
       data {
         id
         attributes {
           name
           body
-          attractiontypes {
+          attractiontypes (sort: "name:asc") {
             data {
               id
               attributes {

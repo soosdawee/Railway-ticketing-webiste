@@ -9,8 +9,8 @@ import { userData } from '../helper.js';
 import { toast } from 'react-toastify';
 
 const CITIES = gql`
-  query GetCities {
-    cities {
+  query GetCities  {
+    cities (sort: "name:asc" pagination: {page:1, pageSize: 30}){
       data {
         id
         attributes {
@@ -23,9 +23,10 @@ const CITIES = gql`
 
 const CONNECTIONS = gql`
   query GetConnections($departure: String!, $arrival: String!) {
-    connections(
+    connections (
       filters: { departure: { eq: $departure }, arrival: { eq: $arrival } }
       sort: "departureTime:asc"
+      pagination: {page:1, pageSize: 30}
       ) {
       data {
         id
@@ -233,7 +234,7 @@ function TicketingForm() {
               minDate={new Date()}
               required
             />
-            <Button type="submit" className="search-button" onClick={handleSearchClick}>
+            <Button className="search-button" onClick={handleSearchClick}>
               Search for trains!
             </Button>
           </div>

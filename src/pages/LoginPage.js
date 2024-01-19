@@ -65,7 +65,7 @@ function FormExample() {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     if (e.target.value.length < 6) {
-      setPasswordError('Password not long enough');
+      setPasswordError('At least 6 characters');
     }else {
       setPasswordError('');
     }
@@ -79,7 +79,7 @@ function FormExample() {
           <InputGroup className='actual-input' hasValidation>
             <Form.Control
               type="text"
-              placeholder="Enter your username"
+              placeholder="Username or Email"
               aria-describedby="inputGroupPrepend"
               required
               value={identifier}

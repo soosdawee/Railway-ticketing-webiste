@@ -27,11 +27,11 @@ export default function PhotoPage() {
     const { loading, error, data } = useQuery(PIC, {
         variables: {id : id}
     });
-    console.log(data?.cities.data[0].attributes.image.data.attributes.url);
+    console.log(data?.cities.data[0]?.attributes.image.data.attributes.url);
   return (
     <div className='photo-page'>
       <img
-  src={`http://localhost:1337${data?.cities.data[0].attributes.image.data.attributes.url}`}
+  src={`http://localhost:1337${data?.cities.data[0]?.attributes.image.data.attributes.url}`}
   alt="City Image"
 />
 
